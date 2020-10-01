@@ -13,6 +13,9 @@ import { AppComponent } from './app.component';
 import { CabecalhoComponent } from './cabecalho/cabecalho.component';
 import { ClienteInserirComponent } from './clientes/cliente-inserir/cliente-inserir.component';
 import { ClienteListaComponent } from './clientes/cliente-lista/cliente-lista.component'
+
+import { ClienteService } from './clientes/cliente.service';
+
 @NgModule({
   declarations: [AppComponent, ClienteInserirComponent, CabecalhoComponent, ClienteListaComponent],
   imports: [

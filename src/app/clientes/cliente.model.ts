@@ -1,5 +1,5 @@
 export interface Cliente {
-  nome: string;
+  nome? : string;
   fone: string;
   email: string;
 }
