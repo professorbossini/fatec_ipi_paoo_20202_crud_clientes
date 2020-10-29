@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module';
 
 
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +25,7 @@ import { ClienteService } from './clientes/cliente.service';
     BrowserModule,
     FormsModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,

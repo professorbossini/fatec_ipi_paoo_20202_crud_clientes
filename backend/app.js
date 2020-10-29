@@ -48,10 +48,11 @@ app.post('/api/clientes', (req, res, next) => {
     email: req.body.email
   });
   cliente.save()
-  .then((document) => {
-    console.log(`Inserção ok: ${document}`);
+    .then((clienteInserido) => {
+      console.log(`Inserção ok: ${clienteInserido}`);
     res.status(201).json({
-      mensagem: 'Cliente Inserido'
+      mensagem: 'Cliente Inserido',
+      id: clienteInserido._id
     });
   })
   .catch((error) => {
@@ -67,6 +68,7 @@ app.post('/api/clientes', (req, res, next) => {
 app.get ('/api/clientes', (req, res, next) =>{
   Cliente.find()
   .then(documents => {
+    console.log(documents);
     res.status(200).json({
       mensagem: 'Tudo ok',
       clientes: documents
@@ -79,13 +81,21 @@ app.get ('/api/clientes', (req, res, next) =>{
       clientes: []
     })
   })
-
   /*//res.send ("Hello From the Back End monitorado");
   res.status(200).json({
     mensagem: "Tudo ok",
     clientes: clientes
   });*/
 })
+
+//DELETE /api/clientes/5f91c274c2f25bff67d2f4da
+app.delete('/api/clientes/:id', (req, res, next) => {
+  Cliente.deleteOne({_id: req.params.id})
+  .then((resultado) => {
+    console.log(resultado);
+    res.status(200).json({mensagem: "Cliente removido"});
+  })
+});
 
 
 
