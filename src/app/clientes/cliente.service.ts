@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Cliente } from './cliente.model'
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, timestamp } from 'rxjs/operators';
 
 
 @Injectable ({providedIn: 'root'})
@@ -12,6 +12,15 @@ export class ClienteService {
 
   constructor (private httpClient: HttpClient){
 
+  }
+
+  getCliente (idCliente: string){
+    return this.httpClient.get<{_id: string, nome: string, fone: string, email: string}>(
+      `http://localhost:3000/api/clientes/${idCliente}`
+    )
+    /*return {...this.clientes.find(c => c.id === idCliente)};*/
+    /*let cli = this.clientes.find((c) => c.id === idCliente);
+    return cli;*/
   }
 
   getClientes(): void{
@@ -31,6 +40,18 @@ export class ClienteService {
       this.listaClientesAtualizada.next([...this.clientes]);//push
     })
     //return [...this.clientes];
+  }
+
+  atualizarCliente (id: string, nome: string, fone: string, email: string){
+    const cliente: Cliente = {id, nome, fone, email};
+    this.httpClient.put(`http://localhost:3000/api/clientes/${id}`, cliente)
+    .subscribe(res => {
+      const copia = [...this.clientes];
+      const indice = copia.findIndex (cli => cli.id === cliente.id);
+      copia[indice] = cliente;
+      this.clientes = copia;
+      this.listaClientesAtualizada.next([...this.clientes]);
+    });
   }
 
   adicionarCliente (nome: string, fone: string, email: string): void{

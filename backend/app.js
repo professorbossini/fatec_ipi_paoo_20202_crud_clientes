@@ -15,33 +15,16 @@ mongoose.connect('mongodb+srv://fatec_ipi:fatec_ipi@cluster0.ssm0w.mongodb.net/f
 .then(() => console.log ("Conexão OK"))
 .catch((e) => console.log ("Conexão falhou: " + e));
 
-const clientes = [
-  {
-    id: '1',
-    nome: 'Carlos',
-    fone: '11223344',
-    email: 'carlos@email.com'
-  },
-  {
-    id: '2',
-    nome: 'Catia',
-    fone: '22334455',
-    email: 'catia@email.com'
-  }
-]
 
 //CORS: Cross-Origin Resource Sharing
 app.use ((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader ('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.setHeader ('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+  res.setHeader ('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   next();
 });
 
 app.post('/api/clientes', (req, res, next) => {
-  /*const cliente = req.body;
-  clientes.push(cliente);
-  console.log (cliente);*/
   const cliente = new Cliente ({
     nome: req.body.nome,
     fone: req.body.fone,
@@ -81,11 +64,15 @@ app.get ('/api/clientes', (req, res, next) =>{
       clientes: []
     })
   })
-  /*//res.send ("Hello From the Back End monitorado");
-  res.status(200).json({
-    mensagem: "Tudo ok",
-    clientes: clientes
-  });*/
+})
+
+app.get('/api/clientes/:id', (req, res, next) => {
+  Cliente.findById(req.params.id).then( cli => {
+    if (cli)
+      res.status(200).json(cli)
+    else
+      res.status(404).json({mensagem: "Cliente não encontrado!"})
+  })
 })
 
 //DELETE /api/clientes/5f91c274c2f25bff67d2f4da
@@ -96,6 +83,22 @@ app.delete('/api/clientes/:id', (req, res, next) => {
     res.status(200).json({mensagem: "Cliente removido"});
   })
 });
+
+app.put ('/api/clientes/:idCliente', (req, res, next) => {
+  const cliente = new Cliente({
+    _id: req.params.idCliente,
+    nome: req.body.nome,
+    fone: req.body.fone,
+    email: req.body.email
+  });
+  Cliente.updateOne(
+    { _id: req.params.idCliente},
+    cliente
+  ).then(resultado => {
+    console.log("Atualizou: " + JSON.stringify(resultado))
+    res.status(200).json({mensagem: 'Atualização realizada com sucesso'})
+  })
+})
 
 
 
