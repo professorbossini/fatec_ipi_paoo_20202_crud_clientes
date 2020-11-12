@@ -13,15 +13,18 @@ import { Subscription } from 'rxjs';
 export class ClienteListaComponent implements OnInit {
   clientes: Cliente[] = [];
   private clienteSubscription: Subscription;
+  public estaCarregando: boolean = false;
 
   constructor(public clienteService: ClienteService) {
 
   }
 
   ngOnInit(): void {
+    this.estaCarregando = true;
     this.clienteService.getClientes();
     this.clienteSubscription = this.clienteService.getListaClientesAtualizada()
     .subscribe( (clientes: Cliente[]) => {
+      this.estaCarregando = false;
       this.clientes = clientes;
     });
   }
