@@ -4,6 +4,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Cliente } from '../cliente.model';
 
 import { ClienteService } from '../cliente.service';
+import { mimeTypeValidator } from './mime-type.validator';
 
 @Component({
   selector: 'app-cliente-inserir',
@@ -17,12 +18,14 @@ export class ClienteInserirComponent implements OnInit{
   public cliente: Cliente;
   public estaCarregando: boolean = false;
   form: FormGroup;
+  previewImagem: string;
 
   ngOnInit (){
     this.form = new FormGroup({
         nome: new FormControl (null, {validators: [Validators.required, Validators.min(3)]}),
         fone: new FormControl (null, {validators: [Validators.required]}),
-        email: new FormControl (null, {validators: [Validators.required, Validators.email]})
+        email: new FormControl (null, {validators: [Validators.required, Validators.email]}),
+        imagem: new FormControl(null, {validators: [Validators.required], asyncValidators: mimeTypeValidator})
       }
     )
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -57,6 +60,20 @@ export class ClienteInserirComponent implements OnInit{
     private route: ActivatedRoute
   ){
 
+  }
+
+  onImagemSelecionada (event: Event){
+    const arquivo =(event.target as HTMLInputElement).files[0];
+    this.form.patchValue({'imagem': arquivo});
+    this.form.get('imagem').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImagem = reader.result as string;
+    }
+    reader.readAsDataURL(arquivo);
+
+    // console.log(arquivo);
+    // console.log (this.form);
   }
 
 
